@@ -4,8 +4,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Microsoft.ML.Data;
@@ -488,9 +490,22 @@ namespace Microsoft.ML.TensorFlow
 
                 unsafe
                 {
-                    c_api.TF_SessionRun(_session, null, _inputs, _inputValues,
-                         _inputs.Length, _outputs, _outputValues, _outputValues.Length, _operations,
-                        _operations.Length, IntPtr.Zero, _status);
+                    try
+                    {
+                        c_api.TF_SessionRun(_session, null, _inputs, _inputValues,
+                             _inputs.Length, _outputs, _outputValues, _outputValues.Length, _operations,
+                            _operations.Length, IntPtr.Zero, _status);
+                    }
+                    catch (SEHException sehEx)
+                    {
+                        Console.WriteLine($"Catch SEHException of Tensorflow run with message: {sehEx.Message}, " +
+                            $"with Source: {sehEx.Source}, with StackTrace: {sehEx.StackTrace}, with HResult: {sehEx.HResult}," +
+                            $"with InnerException:{sehEx.InnerException}, {sehEx.ErrorCode}, {sehEx.Data}");
+                        var callStack = new StackTrace().ToString();
+                        Console.WriteLine($"Call stack is {callStack}");
+
+                        throw;
+                    }
                 }
 
                 _status.Check(true);

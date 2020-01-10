@@ -22,6 +22,7 @@ using Xunit;
 using Xunit.Abstractions;
 using static Microsoft.ML.DataOperationsCatalog;
 using Microsoft.ML.Trainers;
+using Microsoft.ML.TestFrameworkCommon.ProcessDump;
 
 namespace Microsoft.ML.Scenarios
 {
@@ -1283,22 +1284,30 @@ namespace Microsoft.ML.Scenarios
                 .Append(mlContext.MulticlassClassification.Trainers.ImageClassification("Label", "Image")
                 .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel", inputColumnName: "PredictedLabel"))); ;
 
-            var trainedModel = pipeline.Fit(trainDataset);
+            try
+            {
+                var trainedModel = pipeline.Fit(trainDataset);
 
-            mlContext.Model.Save(trainedModel, shuffledFullImagesDataset.Schema,
-                "model.zip");
+                mlContext.Model.Save(trainedModel, shuffledFullImagesDataset.Schema,
+                    "model.zip");
 
-            ITransformer loadedModel;
-            DataViewSchema schema;
-            using (var file = File.OpenRead("model.zip"))
-                loadedModel = mlContext.Model.Load(file, out schema);
+                ITransformer loadedModel;
+                DataViewSchema schema;
+                using (var file = File.OpenRead("model.zip"))
+                    loadedModel = mlContext.Model.Load(file, out schema);
 
-            // Testing EvaluateModel: group testing on test dataset
-            IDataView predictions = trainedModel.Transform(testDataset);
-            var metrics = mlContext.MulticlassClassification.Evaluate(predictions);
+                // Testing EvaluateModel: group testing on test dataset
+                IDataView predictions = trainedModel.Transform(testDataset);
+                var metrics = mlContext.MulticlassClassification.Evaluate(predictions);
 
-            Assert.InRange(metrics.MicroAccuracy, 0.8, 1);
-            Assert.InRange(metrics.MacroAccuracy, 0.8, 1);
+                Assert.InRange(metrics.MicroAccuracy, 0.8, 1);
+                Assert.InRange(metrics.MacroAccuracy, 0.8, 1);
+            }
+            catch (SEHException)
+            {
+                ProcDumpHelper.TakeProcessDump();
+                throw;
+            }
 
         }
 
@@ -1469,8 +1478,15 @@ namespace Microsoft.ML.Scenarios
         [TensorFlowFact]
         public void TensorFlowImageClassificationWithPolynomialLRScheduling()
         {
-
-            TensorFlowImageClassificationWithLRScheduling(new PolynomialLRDecay(), 50);
+            try
+            {
+                TensorFlowImageClassificationWithLRScheduling(new PolynomialLRDecay(), 50);
+            }
+            catch (SEHException)
+            {
+                ProcDumpHelper.TakeProcessDump();
+                throw;
+            }
         }
 
         internal void TensorFlowImageClassificationWithLRScheduling(LearningRateScheduler learningRateScheduler, int epoch)
@@ -1751,22 +1767,30 @@ namespace Microsoft.ML.Scenarios
 
             var pipeline = mlContext.MulticlassClassification.Trainers.ImageClassification(options);
 
-            var trainedModel = pipeline.Fit(trainDataset);
-            mlContext.Model.Save(trainedModel, shuffledFullImagesDataset.Schema,
+            try
+            {
+                var trainedModel = pipeline.Fit(trainDataset);
+                mlContext.Model.Save(trainedModel, shuffledFullImagesDataset.Schema,
                 "model.zip");
 
-            ITransformer loadedModel;
-            DataViewSchema schema;
-            using (var file = File.OpenRead("model.zip"))
-                loadedModel = mlContext.Model.Load(file, out schema);
+                ITransformer loadedModel;
+                DataViewSchema schema;
+                using (var file = File.OpenRead("model.zip"))
+                    loadedModel = mlContext.Model.Load(file, out schema);
 
-            IDataView predictions = trainedModel.Transform(testDataset);
-            var metrics = mlContext.MulticlassClassification.Evaluate(predictions);
+                IDataView predictions = trainedModel.Transform(testDataset);
+                var metrics = mlContext.MulticlassClassification.Evaluate(predictions);
 
-            // Assert accuracy was returned meaning training completed
-            // by skipping bad images.
-            Assert.InRange(metrics.MicroAccuracy, 0.3, 1);
-            Assert.InRange(metrics.MacroAccuracy, 0.3, 1);
+                // Assert accuracy was returned meaning training completed
+                // by skipping bad images.
+                Assert.InRange(metrics.MicroAccuracy, 0.3, 1);
+                Assert.InRange(metrics.MacroAccuracy, 0.3, 1);
+            }
+            catch(SEHException)
+            {
+                ProcDumpHelper.TakeProcessDump();
+                throw;
+            }
         }
 
         public static IEnumerable<ImageData> LoadImagesFromDirectory(string folder,
