@@ -15,7 +15,7 @@ namespace Microsoft.ML.TestFrameworkCommon.ProcessDump
         {
             string os = Environment.OSVersion.ToString();
 
-            if(!os.Contains("windows", StringComparison.InvariantCultureIgnoreCase))
+            if(!os.Contains("Windows"))
             {
                 Console.WriteLine("Only support take dumping of processes in windows.");
                 return;
@@ -23,6 +23,7 @@ namespace Microsoft.ML.TestFrameworkCommon.ProcessDump
 
 
             Console.WriteLine("Dumping remaining processes");
+            Console.WriteLine($"Current directory is {Directory.GetCurrentDirectory()}");
             var procDumpInfo = GetProcDumpInfo();
             if (procDumpInfo != null)
             {
@@ -51,8 +52,8 @@ namespace Microsoft.ML.TestFrameworkCommon.ProcessDump
 
         private static ProcDumpInfo? GetProcDumpInfo()
         {
-            string procDumpDirectory = "..\\..\\..\\..\\Tools\\";
-            string dumpOutputDirectory = "..\\..\\..\\";
+            string procDumpDirectory = "..\\..\\Tools\\";
+            string dumpOutputDirectory = "..\\";
 
             if (!string.IsNullOrEmpty(procDumpDirectory))
             {
