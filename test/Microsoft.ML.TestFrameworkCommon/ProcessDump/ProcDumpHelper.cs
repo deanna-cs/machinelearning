@@ -40,8 +40,7 @@ namespace Microsoft.ML.TestFrameworkCommon.ProcessDump
 
                 //take dump of current process
                 var currentProcess = Process.GetCurrentProcess();
-                var dumpDir = procDumpInfo.Value.DumpDirectory;
-                var dumpFilePath = Path.Combine(dumpDir, $"{currentProcess.ProcessName}.dmp");
+                var dumpFilePath = $"{currentProcess.ProcessName}.dmp";
                 DumpProcess(currentProcess, procDumpInfo.Value.ProcDumpFilePath, dumpFilePath);
             }
             else
@@ -52,8 +51,8 @@ namespace Microsoft.ML.TestFrameworkCommon.ProcessDump
 
         private static ProcDumpInfo? GetProcDumpInfo()
         {
-            string procDumpDirectory = "..\\..\\Tools\\";
-            string dumpOutputDirectory = "..\\";
+            string procDumpDirectory = "..\\..\\..\\..\\Tools\\";
+            string dumpOutputDirectory = "\\";
 
             if (!string.IsNullOrEmpty(procDumpDirectory))
             {
@@ -97,8 +96,7 @@ namespace Microsoft.ML.TestFrameworkCommon.ProcessDump
             }
             catch (Exception ex)
             {
-                Console.WriteLine("FAILED");
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"FAILED to take dump with exception: {ex.Message}");
             }
         }
     }
