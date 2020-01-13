@@ -90,6 +90,7 @@ namespace Microsoft.ML.TestFrameworkCommon.ProcessDump
                 else
                 {
                     Console.WriteLine($"FAILED with {processOutput.ExitCode}");
+                    Console.WriteLine(string.Join(Environment.NewLine, processOutput.ErrorLines));
                     Console.WriteLine($"{procDumpExeFilePath} {args}");
                     Console.WriteLine(string.Join(Environment.NewLine, processOutput.OutputLines));
                 }
