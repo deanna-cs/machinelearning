@@ -73,6 +73,23 @@ namespace Microsoft.ML.TestFrameworkCommon.ProcessDump
                 return;
             }
 
+            if(!File.Exists(procDumpExeFilePath))
+            {
+                if(Directory.Exists("..\\..\\..\\..\\Tools\\"))
+                {
+                    Console.WriteLine("..\\..\\..\\..\\Tools\\ directory exists but procdump.exe not exist.");
+                    string[] fileEntries = Directory.GetFiles("..\\..\\..\\..\\Tools\\");
+                    foreach (string fileName in fileEntries)
+                        Console.WriteLine($"     --debug: {fileName}");
+                }
+                Console.WriteLine("..\\..\\..\\..\\Tools\\ directory not exists.");
+            }
+            else
+            {
+                Console.WriteLine($"{procDumpExeFilePath} exists.");
+            }
+
+            Console.WriteLine($"procDumpExeFilePath {procDumpExeFilePath}.");
             Console.WriteLine($"Dumping {name} {targetProcess.Id} to {dumpFilePath} ... ");
             try
             {
