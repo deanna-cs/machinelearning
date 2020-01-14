@@ -86,7 +86,7 @@ namespace Microsoft.ML.TestFrameworkCommon.ProcessDump
             Console.WriteLine($"Dumping {name} {targetProcess.Id} to {dumpFilePath} ... ");
             try
             {
-                var args = $"-accepteula -ma {targetProcess.Id} {dumpFilePath}";
+                var args = $"-accepteula {targetProcess.Id} {dumpFilePath}";
                 var processInfo = ProcessRunner.CreateProcess(procDumpExeFilePath, args);
                 var processOutput = processInfo.Result.Result;
 
