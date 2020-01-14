@@ -183,8 +183,10 @@ namespace Microsoft.ML.TestFrameworkCommon.ProcessDump
             }
             else
             {
-                processStartInfo.CreateNoWindow = !displayWindow;
-                processStartInfo.UseShellExecute = displayWindow;
+                processStartInfo.CreateNoWindow = true;// !displayWindow;
+                processStartInfo.RedirectStandardOutput = true;
+                processStartInfo.RedirectStandardError = true;
+                processStartInfo.UseShellExecute = false;// displayWindow;
             }
 
             return processStartInfo;

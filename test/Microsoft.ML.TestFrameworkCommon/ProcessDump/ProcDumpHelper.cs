@@ -75,13 +75,6 @@ namespace Microsoft.ML.TestFrameworkCommon.ProcessDump
 
             if(!File.Exists(procDumpExeFilePath))
             {
-                if(Directory.Exists("..\\..\\..\\..\\Tools\\"))
-                {
-                    Console.WriteLine("..\\..\\..\\..\\Tools\\ directory exists but procdump.exe not exist.");
-                    string[] fileEntries = Directory.GetFiles("..\\..\\..\\..\\Tools\\");
-                    foreach (string fileName in fileEntries)
-                        Console.WriteLine($"     --debug: {fileName}");
-                }
                 Console.WriteLine("..\\..\\..\\..\\Tools\\ directory not exists.");
             }
             else
@@ -110,6 +103,10 @@ namespace Microsoft.ML.TestFrameworkCommon.ProcessDump
                     Console.WriteLine(string.Join(Environment.NewLine, processOutput.ErrorLines));
                     Console.WriteLine($"{procDumpExeFilePath} {args}");
                     Console.WriteLine(string.Join(Environment.NewLine, processOutput.OutputLines));
+
+                    string[] fileEntries = Directory.GetFiles(Directory.GetCurrentDirectory());
+                    foreach (string fileName in fileEntries)
+                        Console.WriteLine($"     --debug: {fileName}");
                 }
             }
             catch (Exception ex)
