@@ -65,7 +65,7 @@ jobs:
     name: Windows_x64_NetCoreApp21
     buildScript: build.cmd
     pool:
-      name: Agent-windows-1
+      name: MachineLearning Test
 
 # - template: /build/ci/job-template.yml
 #   parameters:
