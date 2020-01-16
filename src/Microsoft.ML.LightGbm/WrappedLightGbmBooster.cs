@@ -45,7 +45,20 @@ namespace Microsoft.ML.Trainers.LightGbm
         public bool Update()
         {
             int isFinished = 0;
-            LightGbmInterfaceUtils.Check(WrappedLightGbmInterface.BoosterUpdateOneIter(Handle, ref isFinished));
+            int updateResult = 0;
+
+            try
+            {
+                updateResult = WrappedLightGbmInterface.BoosterUpdateOneIter(Handle, ref isFinished);
+            }
+            catch
+            {
+                Console.WriteLine($"---Debug---:Exception from BoosterUpdateOneIter");
+                var callStack = new System.Diagnostics.StackTrace().ToString();
+                Console.WriteLine($"---Debug---:CallStack {callStack}");
+            }
+
+            LightGbmInterfaceUtils.Check(updateResult);
             return isFinished == 1;
         }
 
