@@ -68,7 +68,7 @@ namespace Microsoft.ML.Tests.TrainerEstimators
             Done();
         }
 
-        [LightGBMFact(Skip = "disable to avoid crash")]
+        [Fact(Skip = "disable to avoid crash")]
         public void LightGBMBinaryEstimatorUnbalanced()
         {
             var (pipe, dataView) = GetBinaryClassificationPipeline();
@@ -92,7 +92,7 @@ namespace Microsoft.ML.Tests.TrainerEstimators
         /// <summary>
         /// LightGBMBinaryTrainer CorrectSigmoid test
         /// </summary>
-        [LightGBMFact(Skip = "Disable to avoid crash")]
+        [Fact(Skip = "Disable to avoid crash")]
         public void LightGBMBinaryEstimatorCorrectSigmoid()
         {
             var (pipe, dataView) = GetBinaryClassificationPipeline();
